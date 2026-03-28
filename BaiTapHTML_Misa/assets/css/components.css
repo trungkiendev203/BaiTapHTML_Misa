@@ -1,0 +1,247 @@
+/* ───────────────────────────────────────────────────────────
+   COMPONENTS.CSS – Buttons, Dialogs, Context Menu, Toast, FAB
+   ─────────────────────────────────────────────────────────── */
+
+/* ── General buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 34px; padding: 0 16px;
+  border-radius: var(--radius); border: 1px solid transparent;
+  font-size: 13px; font-weight: 500; font-family: var(--font);
+  cursor: pointer; transition: all var(--transition);
+}
+.btn-green { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-green:hover { background: var(--green-hover); border-color: var(--green-hover); }
+.btn-out { background: var(--white); color: var(--txt2); border-color: var(--border); }
+.btn-out:hover { background: var(--bg); }
+.btn-red { background: var(--red); color: #fff; border-color: var(--red); }
+.btn-red:hover { background: var(--red-hover); border-color: var(--red-hover); }
+
+/* ═══════════════════════════════════════
+   DIALOG
+═══════════════════════════════════════ */
+.dlg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.35); z-index: 2000;
+  display: flex; align-items: center; justify-content: center;
+}
+.dlg {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-dlg);
+  width: 640px; max-width: 96vw;
+  max-height: 90vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.dlg-sm   { width: 420px; }
+
+/* ── Warning/small dialog ── */
+.dlg-warn {
+  width: 380px; max-width: 94vw;
+  border-radius: 8px;
+}
+.dlg-warn-body {
+  padding: 4px 24px 16px;
+  font-size: 13.5px; color: var(--txt);
+  line-height: 1.5;
+}
+.btn-out-green {
+  height: 34px; padding: 0 20px;
+  border: 1.5px solid var(--green); border-radius: var(--radius);
+  background: transparent; color: var(--green);
+  font-size: 13px; font-weight: 500; font-family: var(--font);
+  cursor: pointer; transition: all var(--transition);
+}
+.btn-out-green:hover { background: #e8f5f1; }
+
+
+.dlg-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.dlg-title {
+  font-size: 22px; font-weight: 700; color: var(--txt);
+}
+.warn-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; }
+.dlg-icon-btn {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  color: var(--txt3); border-radius: 50%;
+  transition: all var(--transition);
+}
+.dlg-icon-btn:hover { background: #f0f2f5; color: var(--txt); }
+
+.dlg-body {
+  padding: 16px 24px 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 155px 120px 173px 120px;
+  column-gap: 8px;
+  row-gap: 14px;
+  align-items: center;
+}
+/* Full row elements span columns 2-4 */
+.grid-span2 { grid-column: 2 / 5; }
+.dlg-foot {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  background: #fafafa;
+  flex-shrink: 0;
+}
+
+/* ─── Form rows inside dialog ─── */
+.frow {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.frow-start { align-items: flex-start; }
+
+.flbl {
+  width: 155px; min-width: 155px;
+  font-size: 13px; font-weight: 500; color: var(--txt);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+.flbl2 {
+  width: 175px; min-width: 175px; flex-shrink: 0;
+  font-size: 13px; font-weight: 500; color: var(--txt);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  padding-left: 4px;
+}
+.req { color: var(--red); margin-left: 2px; }
+
+
+.finp {
+  flex: 1;
+  height: 34px; padding: 0 10px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 13px; color: var(--txt); background: var(--white);
+  transition: border-color var(--transition);
+  font-family: var(--font);
+}
+.finp:focus { border-color: var(--green); }
+.finp.err   { border-color: var(--red); }
+.finp:read-only, .finp-ro { background: #f5f5f5; color: var(--txt2); }
+textarea.finp { height: auto; padding: 7px 10px; resize: vertical; min-height: 72px; }
+
+/* Time input group – both inputs equal width */
+.time-grp {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.time-grp .ctime-wrap { flex: 1; min-width: 0; }
+.time-grp .finp-ro    { flex: 1; min-width: 0; height: 34px; }
+.time-w { flex: 1; min-width: 0; }
+.time-w .finp { width: 100%; }
+
+
+/* ── Custom HH:MM time input ── */
+.ctime-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex; align-items: center;
+  height: 34px; padding: 0 8px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--white);
+  transition: border-color var(--transition);
+  gap: 2px;
+}
+.ctime-wrap:focus-within { border-color: var(--green); }
+.ctime-wrap.err { border-color: var(--red); }
+.ctime-hh, .ctime-mm {
+  border: none; outline: none; background: transparent;
+  font-size: 13px; color: var(--txt); font-family: var(--font);
+  text-align: center; padding: 0;
+}
+.ctime-hh { width: 28px; }
+.ctime-mm { width: 28px; }
+.ctime-hh::placeholder, .ctime-mm::placeholder { color: var(--txt3); }
+.ctime-sep { color: var(--txt3); font-size: 14px; font-weight: 600; line-height: 1; }
+.ctime-ico { color: var(--txt3); flex-shrink: 0; margin-left: auto; }
+
+/* ─── Radio ─── */
+.radio-row { display: flex; align-items: center; gap: 20px; }
+.rlbl {
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; font-size: 13px; color: var(--txt);
+  user-select: none;
+}
+.rlbl input[type=radio] { display: none; }
+.rdot {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1.5px solid #bbb;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: border-color var(--transition);
+}
+.rdot.on { border-color: var(--green); }
+.rdot.on::after {
+  content: ''; width: 7px; height: 7px;
+  border-radius: 50%; background: var(--green); display: block;
+}
+
+/* ═══════════════════════════════════════
+   CONTEXT MENU
+═══════════════════════════════════════ */
+.ctx-menu {
+  position: fixed; z-index: 5000;
+  background: var(--white);
+  border: 1px solid var(--border); border-radius: 6px;
+  box-shadow: var(--shadow);
+  min-width: 160px;
+  padding: 4px 0;
+}
+.ctx-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px; font-size: 13px; color: var(--txt);
+  cursor: pointer; transition: background var(--transition);
+  white-space: nowrap;
+}
+.ctx-item:hover { background: var(--bg); }
+.ctx-danger { color: var(--red); }
+.ctx-danger:hover { background: var(--red-light); }
+.ctx-sep { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+.toast-area {
+  position: fixed; top: 16px; right: 16px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 6px;
+  box-shadow: var(--shadow); font-size: 13px; font-weight: 500;
+  min-width: 240px; max-width: 360px; pointer-events: all;
+  background: var(--white); border-left: 3px solid;
+  animation: toastIn .22s ease forwards;
+}
+.toast.success { border-color: var(--green); color: #1b5e3b; }
+.toast.error   { border-color: var(--red);   color: #c0392b; }
+.toast.info    { border-color: var(--txt3);  color: var(--txt2); }
+.toast.hiding  { animation: toastOut .22s ease forwards; }
+@keyframes toastIn  { from { opacity:0; transform:translateX(100%); } to { opacity:1; transform:translateX(0); } }
+@keyframes toastOut { to   { opacity:0; transform:translateX(100%); } }
+
+/* ═══════════════════════════════════════
+   FAB
+═══════════════════════════════════════ */
+.fab {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--green); border: none;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 12px rgba(0,160,82,.4);
+  cursor: pointer; z-index: 500;
+  transition: background var(--transition), transform var(--transition);
+}
+.fab:hover { background: var(--green-hover); transform: scale(1.08); }

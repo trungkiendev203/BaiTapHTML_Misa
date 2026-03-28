@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ca làm việc – AMIS Quản Trị Sản Xuất</title>
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/table.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+<div id="app" class="app-shell" @click="ctxVisible=false" @keydown.esc="closeDialog">
+
+  <!-- ════════════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════════════ -->
+  <header class="app-header">
+    <!-- Brand (inside sidebar column) -->
+    <div class="header-brand" :class="{ collapsed: sidebarCollapsed }">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="cursor: pointer; flex-shrink: 0;" @click.stop="devToast" title="Tất cả ứng dụng" v-show="!sidebarCollapsed">
+        <circle cx="4" cy="4" r="2.5" fill="#666"/>
+        <circle cx="12" cy="4" r="2.5" fill="#666"/>
+        <circle cx="20" cy="4" r="2.5" fill="#666"/>
+        <circle cx="4" cy="12" r="2.5" fill="#666"/>
+        <circle cx="12" cy="12" r="2.5" fill="#666"/>
+        <circle cx="20" cy="12" r="2.5" fill="#666"/>
+        <circle cx="4" cy="20" r="2.5" fill="#666"/>
+        <circle cx="12" cy="20" r="2.5" fill="#666"/>
+        <circle cx="20" cy="20" r="2.5" fill="#666"/>
+      </svg>
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="6" fill="#00A852"/>
+        <path d="M12 21 L19 14 C20.5 12.5 23 12.5 24.5 14 C26 15.5 26 18 24.5 19.5 L21.5 22.5" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M20 11 L13 18 C11.5 19.5 9 19.5 7.5 18 C6 16.5 6 14 7.5 12.5 L10.5 9.5" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span class="brand-name" v-show="!sidebarCollapsed">Sản xuất</span>
+    </div>
+
+    <!-- Company dropdown -->
+    <div class="header-company-wrap">
+      <span class="header-company-name">Công ty cổ phần Misa 234</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <!-- Icons -->
+    <div class="header-icons">
+      <!-- Import / Action -->
+      <button class="hdr-btn" @click.stop="devToast" title="Tải xuống">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" stroke-dasharray="4.5 2.5"/>
+          <path d="M12 7v8"/>
+          <path d="M8.5 11.5L12 15l3.5-3.5"/>
+        </svg>
+      </button>
+      <!-- Separator -->
+      <div class="hdr-sep"></div>
+      <!-- Package -->
+      <button class="hdr-btn" @click.stop="devToast" title="Gói dịch vụ">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </button>
+      <!-- Thêm người dùng -->
+      <button class="hdr-btn" @click.stop="devToast" title="Thêm người dùng">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14" stroke="#00A852" stroke-width="2"/><line x1="22" y1="11" x2="16" y2="11" stroke="#00A852" stroke-width="2"/></svg>
+      </button>
+      <!-- Reminder (clock bell) -->
+      <button class="hdr-btn" @click.stop="devToast" title="Nhắc nhở">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      </button>
+      <!-- Bell with badge 9+ -->
+      <button class="hdr-btn hdr-btn--badge" @click.stop="devToast" title="Thông báo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="hdr-badge">9+</span>
+      </button>
+      <!-- Help/Question -->
+      <button class="hdr-btn" @click.stop="devToast" title="Trợ giúp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <!-- More options (dots circle) -->
+      <button class="hdr-btn" @click.stop="devToast" title="Tính năng khác">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="7" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="17" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
+      </button>
+      <!-- Knowledge (01.svg bulb icon) -->
+      <button class="hdr-btn" @click.stop="devToast" title="Kiến thức hữu ích">
+        <svg width="20" height="20" viewBox="187 59 14 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 75.000201 46.001882 L 75.000201 56.998788 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 75.000201 46.001882 C 75.066524 45.664791 75.55842 45.001661 77.000947 45.001661 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 93.00139 46.001882 C 92.935067 45.664791 92.437644 45.001661 91.000644 45.001661 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 93.00139 46.001882 L 93.00139 56.998788 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 75.000201 56.998788 C 76.370878 56.208558 77.918417 55.794102 79.499117 55.794102 C 81.079817 55.794102 82.632882 56.208558 83.998032 56.998788 C 85.368709 56.208558 86.921774 55.794102 88.502474 55.794102 C 90.077647 55.794102 91.630713 56.208558 93.00139 56.998788 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 81.599347 48.068638 C 80.93059 47.576816 80.433167 46.886056 80.184455 46.101352 C 79.930217 45.311122 79.94127 44.471157 80.206563 43.686453 C 80.471855 42.90175 80.980332 42.222041 81.660144 41.741272 C 82.339955 41.260503 83.15794 41.000777 83.998032 41.000777 C 84.838124 41.000777 85.656109 41.260503 86.341447 41.741272 C 87.021259 42.222041 87.529736 42.90175 87.795028 43.686453 C 88.06032 44.471157 88.065847 45.311122 87.817136 46.101352 C 87.568424 46.886056 87.071001 47.576816 86.402244 48.068638 C 86.087209 48.372572 85.855078 48.748346 85.711378 49.157276 C 85.573205 49.566206 85.534517 50.002767 85.60084 50.428275 C 85.60084 50.842731 85.429505 51.246135 85.131051 51.539018 C 84.832597 51.8319 84.423605 51.997683 83.998032 51.997683 C 83.577986 51.997683 83.168994 51.8319 82.87054 51.539018 C 82.566559 51.246135 82.400751 50.842731 82.400751 50.428275 C 82.461547 50.002767 82.422859 49.566206 82.284686 49.157276 C 82.146513 48.748346 81.914382 48.372572 81.599347 48.068638 Z M 81.599347 48.068638 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 82.157567 48.858867 L 85.838497 48.858867 " stroke="#ffaa2b" stroke-width="1.5" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 83.998032 38.000114 L 83.998032 36.999893 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 79.001694 40.000556 L 78.045536 39.702147 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/><path stroke-linecap="round" transform="matrix(0.706768, 0, 0, 0.706875, 134.722759, 34.935546)" fill="none" stroke-linejoin="round" d="M 88.999897 40.000556 L 89.956055 39.702147 " stroke="#ffaa2b" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4"/></svg>
+      </button>
+      <!-- Avatar with green border -->
+      <div class="hdr-avatar hdr-avatar--green" @click.stop="devToast">BN</div>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════════
+       BODY
+  ════════════════════════════════════════════════ -->
+  <div class="app-body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar" :class="{ collapsed: sidebarCollapsed }">
+      <div class="sidebar-scroll">
+
+        <div class="nav-item">
+          <div class="nav-link" @click="navigate('tong-quan')" :class="{active: currentRoute==='tong-quan'}">
+            <span class="nav-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2.5 10.5 L12 2.5 L21.5 10.5 V19.5 A1.5 1.5 0 0 1 20 21 H4 A1.5 1.5 0 0 1 2.5 19.5 Z"/>
+                <path d="M8 13.5 Q12 16.5 16 13.5"/>
+              </svg>
+            </span>
+            <span class="nav-txt">Tổng quan</span>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <div class="nav-link" @click="navigate('don-dat-hang')" :class="{active: currentRoute==='don-dat-hang'}">
+            <span class="nav-ico"><i class="ph-light ph-shopping-cart" style="font-size: 20px;"></i></span>
+            <span class="nav-txt">Đơn đặt hàng</span>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.keHoach}">
+          <div class="nav-link" @click="toggleMenu('keHoach')">
+            <span class="nav-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 2 V5 M8 2 V5"/>
+                <path d="M4 10 H20"/>
+                <path d="M11 21 H6 A2 2 0 0 1 4 19 V6 A2 2 0 0 1 6 4 H18 A2 2 0 0 1 20 6 V11"/>
+                <circle cx="17.5" cy="17.5" r="2.5"/>
+                <path d="M17.5 14 V13 M17.5 21 V22 M14 17.5 H13 M21 17.5 H22"/>
+                <path d="M15 15 L14.3 14.3 M20 20 L20.7 20.7 M20 15 L20.7 14.3 M15 20 L14.3 20.7"/>
+              </svg>
+            </span>
+            <span class="nav-txt">Kế hoạch sản xuất</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.dieuPhoi}">
+          <div class="nav-link" @click="toggleMenu('dieuPhoi')">
+            <span class="nav-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 2 V5 M8 2 V5"/>
+                <path d="M4 10 H20"/>
+                <path d="M11 21 H6 A2 2 0 0 1 4 19 V6 A2 2 0 0 1 6 4 H18 A2 2 0 0 1 20 6 V11"/>
+                <circle cx="17.5" cy="17.5" r="3.5"/>
+                <path d="M17.5 14.5 V17.5 L19.5 19"/>
+              </svg>
+            </span>
+            <span class="nav-txt">Điều phối và thực thi</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.kiemTra}">
+          <div class="nav-link" @click="toggleMenu('kiemTra')">
+            <span class="nav-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 12 3.5 A 8.5 8.5 0 1 1 6 18"/>
+                <path d="M 4.5 16 A 8.5 8.5 0 0 1 3.5 12"/>
+                <path d="M 4.5 8 A 8.5 8.5 0 0 1 8 4.5"/>
+                <path d="M 8.5 12.5 L 11.5 15.5 L 16.5 9.5"/>
+              </svg>
+            </span>
+            <span class="nav-txt">Kiểm tra chất lượng</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.kho}">
+          <div class="nav-link" @click="toggleMenu('kho')">
+            <span class="nav-ico"><i class="ph-light ph-warehouse" style="font-size: 20px;"></i></span>
+            <span class="nav-txt">Kho vật tư</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.giaoViec}">
+          <div class="nav-link" @click="toggleMenu('giaoViec')">
+            <span class="nav-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 16 4 H 18 A 2 2 0 0 1 20 6 V 20 A 2 2 0 0 1 18 22 H 6 A 2 2 0 0 1 4 20 V 6 A 2 2 0 0 1 6 4 H 8"/>
+                <rect x="8" y="2" width="8" height="4" rx="1"/>
+                <path d="M 11 15 L 13 17 L 17 12"/>
+                <circle cx="8" cy="13" r="1.5" fill="currentColor" stroke="none"/>
+                <circle cx="8" cy="17" r="1.5" fill="currentColor" stroke="none"/>
+              </svg>
+            </span>
+            <span class="nav-txt">Giao việc</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.giaThanhKH}">
+          <div class="nav-link" @click="toggleMenu('giaThanhKH')">
+            <span class="nav-ico"><i class="ph-light ph-receipt" style="font-size: 20px;"></i></span>
+            <span class="nav-txt">Giá thành kế hoạch</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.thueGiaCong}">
+          <div class="nav-link" @click="toggleMenu('thueGiaCong')">
+            <span class="nav-ico"><i class="ph-light ph-wrench" style="font-size: 20px;"></i></span>
+            <span class="nav-txt">Thuê gia công</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-sep"></div>
+
+        <div class="nav-item">
+          <div class="nav-link" @click="navigate('bao-cao')" :class="{active: currentRoute==='bao-cao'}">
+            <span class="nav-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 4 4 V 20 H 20"/>
+                <path d="M 4 13 C 7 13 8 7 11 7 C 14 7 17 11 20 11"/>
+                <path d="M 8 20 V 15 M 12 20 V 11 M 16 20 V 14"/>
+              </svg>
+            </span>
+            <span class="nav-txt">Báo cáo</span>
+          </div>
+        </div>
+
+        <div class="nav-sep"></div>
+
+        <div class="nav-item" :class="{open: openMenus.sanPham}">
+          <div class="nav-link" @click="toggleMenu('sanPham')">
+            <span class="nav-ico"><i class="ph-light ph-cube" style="font-size: 20px;"></i></span>
+            <span class="nav-txt">Sản phẩm, NVL</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+          <div class="nav-sub" v-show="openMenus.sanPham">
+            <div class="nav-sublink" @click="navigate('vat-tu-hang-hoa')">Vật tư hàng hóa</div>
+            <div class="nav-sublink" @click="navigate('nhom-vat-tu')">Nhóm vật tư hàng hóa</div>
+            <div class="nav-sublink" @click="navigate('dinh-muc')">Định mức nguyên vật liệu</div>
+            <div class="nav-sublink" @click="navigate('nguyen-vat-lieu-thay-the')">Nguyên vật liệu thay thế</div>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.quyTrinh}">
+          <div class="nav-link" @click="toggleMenu('quyTrinh')">
+            <span class="nav-ico">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
+                <path d="M 6 5.3 A 9 9 0 1 1 6 18.7"/>
+                <path d="M 15.5 16 A 5.5 5.5 0 1 1 15.5 8"/>
+              </svg>
+            </span>
+            <span class="nav-txt">Quy trình sản xuất</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item" :class="{open: openMenus.nangLuc}">
+          <div class="nav-link" @click="toggleMenu('nangLuc')">
+            <span class="nav-ico"><i class="ph-light ph-user-gear" style="font-size: 20px;"></i></span>
+            <span class="nav-txt">Năng lực sản xuất</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item has-flyout" @mouseenter="showFlyout($event)" @mouseleave="hideFlyout">
+          <div class="nav-link active-parent" @click="navigate('danh-muc/ca-lam-viec')">
+            <span class="nav-ico"><i class="ph-light ph-list-dashes" style="font-size: 20px;"></i></span>
+            <span class="nav-txt">Danh mục khác</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <div class="nav-link" @click="devToast">
+            <span class="nav-ico"><i class="ph-light ph-gear-six" style="font-size: 20px;"></i></span>
+            <span class="nav-txt">Thiết lập</span>
+            <span class="nav-chev"><i class="ph-light ph-caret-down" style="font-size: 14px;"></i></span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="sidebar-collapse-btn" @click="toggleSidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2"/>
+            <path d="M 9 4 V 20"/>
+            <path d="M 15 15 L 12 12 L 15 9" v-if="!sidebarCollapsed"/>
+            <path d="M 13 15 L 16 12 L 13 9" v-if="sidebarCollapsed"/>
+          </svg>
+          <span v-show="!sidebarCollapsed">Thu gọn</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ── CONTENT ── -->
+    <main class="content" v-if="currentRoute === 'danh-muc/ca-lam-viec'">
+
+      <!-- Page title bar -->
+      <div class="page-bar">
+        <h1 class="page-title">Ca làm việc</h1>
+        <button class="btn-add" @click="openDialog('add')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Thêm
+        </button>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <!-- Search – always visible -->
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9e9e9e" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-inp" v-model="searchQuery" placeholder="Tìm kiếm" id="searchInput">
+        </div>
+        <!-- Bulk actions (shown alongside search when items selected) -->
+        <template v-if="selectedIds.length > 0">
+          <span class="bulk-label">Đã chọn {{ selectedIds.length }}</span>
+          <button class="bulk-clear" @click="clearSelection">Bỏ chọn</button>
+          <button class="btn-bulk btn-bulk-use" v-if="hasInactiveSelected" @click="bulkSetStatus(true)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="16 9 10.5 14.5 7.5 11.5"/></svg>
+            Sử dụng
+          </button>
+          <button class="btn-bulk btn-bulk-stop" v-if="hasActiveSelected" @click="bulkSetStatus(false)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            Ngừng sử dụng
+          </button>
+          <button class="btn-bulk btn-bulk-del" @click="confirmDelete(selectedIds)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+            Xóa
+          </button>
+        </template>
+        <!-- Refresh button (only when nothing selected) -->
+        <button class="tool-btn" style="margin-left: auto;" v-if="selectedIds.length === 0" @click="refreshTable" title="Làm mới">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <div class="tbl-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-chk">
+                  <div class="mchk" :class="{checked: isAllSelected, indet: isSomeSelected && !isAllSelected}"
+                    @click="toggleSelectAll"></div>
+                </th>
+                <th style="min-width: 100px;">Mã ca</th>
+                <th style="min-width: 160px;">Tên ca</th>
+                <th style="min-width: 120px;">Giờ vào ca</th>
+                <th style="min-width: 120px;">Giờ hết ca</th>
+                <th style="min-width: 170px;">Bắt đầu nghỉ giữa ca</th>
+                <th style="min-width: 170px;">Kết thúc nghỉ giữa ca</th>
+                <th class="col-num" style="min-width: 180px;">Thời gian làm việc (giờ)</th>
+                <th class="col-num" style="min-width: 200px;">Thời gian nghỉ giữa ca (giờ)</th>
+                <th style="min-width: 120px;">Trạng thái</th>
+                <th style="min-width: 140px;">Người tạo</th>
+                <th style="min-width: 110px;">Ngày tạo</th>
+                <th style="min-width: 140px;">Người sửa</th>
+                <th style="min-width: 110px;">Ngày sửa</th>
+                <th class="col-act"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in pagedData" :key="row.id"
+                  :class="{ sel: selectedIds.includes(row.id) || activeId === row.id }"
+                  @click="activeId = row.id"
+                  @contextmenu.prevent="showContextMenu($event, row.id)">
+                <td class="col-chk">
+                  <div class="mchk" :class="{checked: selectedIds.includes(row.id)}"
+                    @click.stop="toggleSelect(row.id)"></div>
+                </td>
+                <td>{{ row.ma_ca }}</td>
+                <td>{{ row.ten_ca }}</td>
+                <td>{{ row.gio_vao }}</td>
+                <td>{{ row.gio_het }}</td>
+                <td>{{ row.bat_dau_nghi || '-' }}</td>
+                <td>{{ row.ket_thuc_nghi || '-' }}</td>
+                <td class="col-num">{{ formatNum(row.tg_lam_viec) }}</td>
+                <td class="col-num">{{ formatNum(row.tg_nghi) }}</td>
+                <td>
+                  <span class="badge" :class="row.trang_thai ? 'badge-on' : 'badge-off'">
+                    {{ row.trang_thai ? 'Đang sử dụng' : 'Ngừng sử dụng' }}
+                  </span>
+                </td>
+                <td>{{ row.nguoi_tao }}</td>
+                <td>{{ row.ngay_tao }}</td>
+                <td>{{ row.nguoi_sua }}</td>
+                <td>{{ row.ngay_sua }}</td>
+                <td class="col-act">
+                  <div class="row-acts">
+                    <button class="act-btn" @click.stop="openDialog('edit', row)" title="Sửa">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/><path d="M15 5l4 4"/></svg>
+                    </button>
+                    <button class="act-btn" @click.stop="showContextMenu($event, row.id)" title="Thêm hành động">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="7" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="17" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="pagedData.length === 0">
+                <td colspan="15" style="text-align:center;padding:40px;color:#9e9e9e;">Không có dữ liệu</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="tbl-footer">
+        <span class="footer-total">Tổng số: <b>{{ filteredData.length }}</b></span>
+        <div class="footer-paging">
+          <span class="footer-rpp">Số dòng/trang</span>
+          <select class="rpp-sel" v-model.number="perPage">
+            <option>10</option><option>20</option><option>50</option><option>100</option>
+          </select>
+          <span class="footer-range">{{ pageInfo }}</span>
+          <div class="pager">
+            <button class="pgr-btn" @click="page=1" :disabled="page===1">«</button>
+            <button class="pgr-btn" @click="page--" :disabled="page===1">‹</button>
+            <button class="pgr-btn" @click="page++" :disabled="page===totalPages">›</button>
+            <button class="pgr-btn" @click="page=totalPages" :disabled="page===totalPages">»</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Placeholder for other routes -->
+    <main class="content" v-else>
+      <div class="page-bar">
+        <h1 class="page-title">{{ placeholderTitle }}</h1>
+      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#9e9e9e;font-size:16px;">
+        Tính năng đang trong quá trình phát triển
+      </div>
+    </main>
+
+  </div><!-- /app-body -->
+
+  <!-- ════════════════════════════════════════════════
+       CONTEXT MENU
+  ════════════════════════════════════════════════ -->
+  <div class="ctx-menu" v-show="ctxVisible" :style="{left: ctxX+'px', top: ctxY+'px'}" @click.stop>
+    <div class="ctx-item" @click="ctxEdit">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/><path d="M15 5l4 4"/></svg>
+      Sửa
+    </div>
+    <div class="ctx-item" @click="ctxClone">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Nhân bản
+    </div>
+    <div class="ctx-item" @click="ctxToggleStatus">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      {{ ctxRow && ctxRow.trang_thai ? 'Ngừng sử dụng' : 'Sử dụng' }}
+    </div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item ctx-danger" @click="ctxDelete">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+      Xóa
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       DIALOG THÊM / SỬA
+  ════════════════════════════════════════════════ -->
+  <div class="dlg-overlay" v-show="dialogVisible" @click.self="closeDialog">
+    <div class="dlg">
+      <div class="dlg-head">
+        <span class="dlg-title">{{ dialogMode === 'edit' ? 'Sửa Ca làm việc' : 'Thêm Ca làm việc' }}</span>
+        <div style="display:flex;gap:4px">
+          <button class="dlg-icon-btn" @click="devToast" title="Trợ giúp">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
+          </button>
+          <button class="dlg-icon-btn" @click="closeDialog" title="Đóng">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="dlg-body">
+
+        <!-- Row 1: Mã ca (spans cols 1-2, empty cols 3-4) -->
+        <label class="flbl">Mã ca <span class="req">*</span></label>
+        <input class="finp grid-span2" :class="{err: formErrors.ma_ca}" v-model="form.ma_ca"
+          maxlength="20" :readonly="dialogMode==='edit'"
+          :style="dialogMode==='edit' ? 'background:#f5f5f5' : ''"
+          tabindex="1" ref="fMaCa" id="fMaCa">
+
+        <!-- Row 2: Tên ca (spans cols 1-2) -->
+        <label class="flbl">Tên ca <span class="req">*</span></label>
+        <input class="finp grid-span2" :class="{err: formErrors.ten_ca}" v-model="form.ten_ca"
+          maxlength="50" tabindex="2" id="fTenCa">
+
+        <!-- Row 3: Giờ vào | Giờ hết -->
+        <label class="flbl">Giờ vào ca <span class="req">*</span></label>
+        <div class="ctime-wrap" :class="{err: formErrors.gio_vao}">
+          <input class="ctime-hh" v-model="form.gio_vao_hh" placeholder="HH" maxlength="2"
+            @input="onTimeInput('gio_vao_hh','gio_vao_mm',$event)"
+            @blur="padTime('gio_vao_hh');syncTime('gio_vao')" tabindex="3">
+          <span class="ctime-sep">:</span>
+          <input class="ctime-mm" v-model="form.gio_vao_mm" placeholder="MM" maxlength="2"
+            @input="onTimeInput('gio_vao_mm',null,$event)"
+            @blur="padTime('gio_vao_mm');syncTime('gio_vao')" tabindex="4">
+          <svg class="ctime-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <label class="flbl2">Giờ hết ca <span class="req">*</span></label>
+        <div class="ctime-wrap" :class="{err: formErrors.gio_het}">
+          <input class="ctime-hh" v-model="form.gio_het_hh" placeholder="HH" maxlength="2"
+            @input="onTimeInput('gio_het_hh','gio_het_mm',$event)"
+            @blur="padTime('gio_het_hh');syncTime('gio_het')" tabindex="5">
+          <span class="ctime-sep">:</span>
+          <input class="ctime-mm" v-model="form.gio_het_mm" placeholder="MM" maxlength="2"
+            @input="onTimeInput('gio_het_mm',null,$event)"
+            @blur="padTime('gio_het_mm');syncTime('gio_het')" tabindex="6">
+          <svg class="ctime-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+
+        <!-- Row 4: Bắt đầu nghỉ | Kết thúc nghỉ -->
+        <label class="flbl">Bắt đầu nghỉ giữa ca</label>
+        <div class="ctime-wrap">
+          <input class="ctime-hh" v-model="form.bat_dau_nghi_hh" placeholder="HH" maxlength="2"
+            @input="onTimeInput('bat_dau_nghi_hh','bat_dau_nghi_mm',$event)"
+            @blur="padTime('bat_dau_nghi_hh');syncTime('bat_dau_nghi')" tabindex="7">
+          <span class="ctime-sep">:</span>
+          <input class="ctime-mm" v-model="form.bat_dau_nghi_mm" placeholder="MM" maxlength="2"
+            @input="onTimeInput('bat_dau_nghi_mm',null,$event)"
+            @blur="padTime('bat_dau_nghi_mm');syncTime('bat_dau_nghi')" tabindex="8">
+          <svg class="ctime-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <label class="flbl2">Kết thúc nghỉ giữa ca</label>
+        <div class="ctime-wrap">
+          <input class="ctime-hh" v-model="form.ket_thuc_nghi_hh" placeholder="HH" maxlength="2"
+            @input="onTimeInput('ket_thuc_nghi_hh','ket_thuc_nghi_mm',$event)"
+            @blur="padTime('ket_thuc_nghi_hh');syncTime('ket_thuc_nghi')" tabindex="9">
+          <span class="ctime-sep">:</span>
+          <input class="ctime-mm" v-model="form.ket_thuc_nghi_mm" placeholder="MM" maxlength="2"
+            @input="onTimeInput('ket_thuc_nghi_mm',null,$event)"
+            @blur="padTime('ket_thuc_nghi_mm');syncTime('ket_thuc_nghi')" tabindex="10">
+          <svg class="ctime-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+
+        <!-- Row 5: Thời gian làm việc | Thời gian nghỉ -->
+        <label class="flbl" style="font-size:12px;">Thời gian làm việc (giờ)</label>
+        <input class="finp finp-ro" :value="computedTgLamViec" readonly tabindex="-1" style="text-align:right;">
+        <label class="flbl2" style="font-size:12px;">Thời gian nghỉ giữa ca (giờ)</label>
+        <input class="finp finp-ro" :value="computedTgNghi" readonly tabindex="-1" style="text-align:right;">
+
+        <!-- Row 6: Mô tả (spans all 4 cols) -->
+        <label class="flbl" style="align-self:start;padding-top:8px;">Mô tả</label>
+        <textarea class="finp grid-span2" v-model="form.mo_ta" rows="3" tabindex="11"
+          style="resize:vertical;min-height:72px;"></textarea>
+        <span></span>
+
+        <!-- Row 7: Trạng thái (chỉ khi Sửa) -->
+        <template v-if="dialogMode === 'edit'">
+          <label class="flbl">Trạng thái</label>
+          <div class="radio-row grid-span2">
+            <label class="rlbl">
+              <input type="radio" name="tt" :value="true" v-model="form.trang_thai" tabindex="12">
+              <span class="rdot" :class="{on: form.trang_thai === true}"></span>
+              Đang sử dụng
+            </label>
+            <label class="rlbl">
+              <input type="radio" name="tt" :value="false" v-model="form.trang_thai" tabindex="13">
+              <span class="rdot" :class="{on: form.trang_thai === false}"></span>
+              Ngừng sử dụng
+            </label>
+          </div>
+          <span></span>
+        </template>
+
+      </div>
+
+
+      <div class="dlg-foot">
+        <button class="btn btn-out" @click="closeDialog" tabindex="14">Hủy</button>
+        <button class="btn btn-out" @click="saveForm(true)" tabindex="15">Lưu và Thêm</button>
+        <button class="btn btn-green" @click="saveForm(false)" tabindex="16">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════════
+       DIALOG CẢNH BÁO
+  ════════════════════════════════════════════════ -->
+  <div class="dlg-overlay" v-show="warningVisible" @click.self="warningVisible=false">
+    <div class="dlg dlg-warn">
+      <div class="dlg-head" style="border-bottom:none;padding-bottom:0;">
+        <span class="dlg-title warn-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f1a934" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-width="2.5"/></svg>
+          Cảnh báo!
+        </span>
+      </div>
+      <div class="dlg-warn-body">{{ warningMsg }}</div>
+      <div class="dlg-foot" style="border-top:none;background:transparent;">
+        <button class="btn btn-out-green" @click="warningVisible=false">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       DIALOG XÓA
+  ════════════════════════════════════════════════ -->
+  <div class="dlg-overlay" v-show="deleteVisible" @click.self="deleteVisible=false">
+    <div class="dlg dlg-sm">
+      <div class="dlg-head">
+        <span class="dlg-title warn-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f1a934" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-width="2.5"/></svg>
+          Xóa Ca làm việc
+        </span>
+        <button class="dlg-icon-btn" @click="deleteVisible=false">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="dlg-body" style="padding-top:4px">
+        Các <strong>Ca làm việc</strong> sau khi bị xóa sẽ không thể khôi phục. Bạn có muốn tiếp tục xóa không?
+      </div>
+      <div class="dlg-foot">
+        <button class="btn btn-out" @click="deleteVisible=false">Hủy</button>
+        <button class="btn btn-red" @click="doDelete">Xóa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       FLYOUT MEGA MENU
+  ════════════════════════════════════════════════ -->
+  <div class="nav-flyout" v-show="flyoutVisible" :style="{left: flyoutX+'px', top: flyoutY+'px'}" @mouseenter="keepFlyout" @mouseleave="hideFlyout" @click.stop>
+    <div class="flyout-col">
+      <div class="flyout-header">Đối tượng</div>
+      <div class="flyout-item" @click="devToast">Khách hàng</div>
+      <div class="flyout-item" @click="devToast">Nhà cung cấp</div>
+      <div class="flyout-item" @click="devToast">Nhân viên</div>
+      <div class="flyout-item" @click="devToast">Đối tượng tập hợp chi phí</div>
+    </div>
+    
+    <div class="flyout-col">
+      <div class="flyout-header">Lịch làm việc</div>
+      <div class="flyout-item" style="padding-left: 20px;" :class="{active: currentRoute==='danh-muc/ca-lam-viec'}" @click="navigate('danh-muc/ca-lam-viec')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9e9e9e" stroke-width="2" class="flyout-ic-active" style="position: absolute; left: 6px;"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 004 4h12"/></svg>
+        Ca làm việc
+      </div>
+      <div class="flyout-item" @click="devToast">Ngày nghỉ</div>
+      <div class="flyout-item" @click="devToast">Lịch làm việc</div>
+    </div>
+
+    <div class="flyout-col">
+      <div class="flyout-header">Khác</div>
+      <div class="flyout-item" @click="devToast">Cơ cấu tổ chức</div>
+      <div class="flyout-item" @click="devToast">Kho</div>
+      <div class="flyout-item" @click="devToast">Đơn vị tính</div>
+      <div class="flyout-item" @click="devToast">Lý do dừng công việc</div>
+      <div class="flyout-item" @click="devToast">Loại tiền</div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-area"></div>
+
+  <!-- FAB -->
+  <button class="fab" @click="devToast" title="Chat">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <mask id="amisChatMask">
+          <rect width="24" height="24" fill="white" />
+          <circle cx="12" cy="12" r="5.5" fill="black" />
+          <path d="M 15 14 L 18.5 17.5 L 14 15.5 Z" fill="black" />
+        </mask>
+      </defs>
+      <rect x="1.5" y="9" width="3" height="6" rx="1.5" fill="white" />
+      <rect x="19.5" y="9" width="3" height="6" rx="1.5" fill="white" />
+      <circle cx="12" cy="12" r="9" fill="white" mask="url(#amisChatMask)" />
+      <circle cx="9.5" cy="12" r="1.3" fill="white" />
+      <circle cx="14.5" cy="12" r="1.3" fill="white" />
+    </svg>
+  </button>
+
+</div><!-- /#app -->
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
